@@ -13,14 +13,14 @@ namespace AsyncTCP_Server_2
         static void Main(string[] args)
         {
             int port = 11000;
-            IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
-            IPEndPoint ipEnd = new IPEndPoint(ipAddr,port);
+            var ipAddr = IPAddress.Parse("127.0.0.1");
+            var ipEnd = new IPEndPoint(ipAddr, port);
 
-            Dictionary<string,Socket> dic = new Dictionary<string, Socket>();
+            Dictionary<string, Socket> dic = new Dictionary<string, Socket>();
 
-            Socket sListener = new Socket(ipAddr.AddressFamily,SocketType.Stream,ProtocolType.Tcp);
+            Socket sListener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-            List<Socket> sockets = new List<Socket>(); 
+            List<Socket> sockets = new List<Socket>();
             try
             {
                 sListener.Bind(ipEnd);
@@ -30,7 +30,7 @@ namespace AsyncTCP_Server_2
                 {
                     byte[] user = new byte[1024];
                     Socket accept = sListener.Accept();
-                    
+
 
                     int UserRec = accept.Receive(user);
                     string Name = Encoding.UTF8.GetString(user, 0, UserRec);
@@ -42,9 +42,9 @@ namespace AsyncTCP_Server_2
                     {
                         while (true)
                         {
-                            string str = "Server: "+Console.ReadLine();
+                            string str = "Server: " + Console.ReadLine();
 
-                            
+
                         }
                     }));
 
@@ -68,7 +68,7 @@ namespace AsyncTCP_Server_2
                                 if (rec == "Exit")
                                 {
                                     recieve = acceptTask.Receive(bytes);
-                                    Console.WriteLine(Encoding.UTF8.GetString(bytes, 0, recieve)+" покинул нас.");
+                                    Console.WriteLine(Encoding.UTF8.GetString(bytes, 0, recieve) + " покинул нас.");
                                     dic.Remove(Encoding.UTF8.GetString(bytes, 0, recieve));
                                     break;
                                 }
@@ -79,7 +79,7 @@ namespace AsyncTCP_Server_2
                                 {
                                     socket.Send(Encoding.UTF8.GetBytes(rec));
                                 }
-                                
+
                             }
                         }
                         catch (Exception)
