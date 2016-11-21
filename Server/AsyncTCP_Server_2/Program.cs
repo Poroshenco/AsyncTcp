@@ -35,24 +35,27 @@ namespace AsyncTCP_Server_2
                     string Name = Encoding.UTF8.GetString(user, 0, UserRec);
 
                     dic[Name] = accept;
-                    Console.WriteLine("К нам подключился " + Name);
+                    Console.WriteLine("ВНИМАНИЕ!!! К нам подключился " + Name+"\n");
 
                     Task.Factory.StartNew((() =>
                     {
                         while (true)
                         {
                             string str = "Server: " + Console.ReadLine();
-
-                            foreach (var socket in dic.Values)
+                            if (dic.Values != null)
                             {
-                                socket.Send(Encoding.UTF8.GetBytes(str));
+                                foreach (var socket in dic.Values)
+                                {
+                                    socket.Send(Encoding.UTF8.GetBytes(str));
+                                }
                             }
                         }
                     }));
 
-
                     Task.Factory.StartNew((() =>
                     {
+                        string name = Name;
+
                         try
                         {
                             Socket acceptTask = accept;
@@ -67,9 +70,8 @@ namespace AsyncTCP_Server_2
 
                                 if (rec == "Exit")
                                 {
-                                    recieve = acceptTask.Receive(bytes);
-                                    Console.WriteLine(Encoding.UTF8.GetString(bytes, 0, recieve) + " покинул нас.");
-                                    dic.Remove(Encoding.UTF8.GetString(bytes, 0, recieve));
+                                    Console.WriteLine(name + " покинул нас.");
+                                    dic.Remove(name);
                                     break;
                                 }
 
@@ -84,10 +86,12 @@ namespace AsyncTCP_Server_2
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine("Он покинул нас...");
-                            throw;
+                            Console.WriteLine(Name + " покинул нас.");
+                            dic.Remove(name);
                         }
                     }));
+
+                    
                 }
             }
             catch (Exception)
