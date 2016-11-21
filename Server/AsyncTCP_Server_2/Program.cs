@@ -43,7 +43,10 @@ namespace AsyncTCP_Server_2
                         {
                             string str = "Server: " + Console.ReadLine();
 
-
+                            foreach (var socket in dic.Values)
+                            {
+                                socket.Send(Encoding.UTF8.GetBytes(str));
+                            }
                         }
                     }));
 
