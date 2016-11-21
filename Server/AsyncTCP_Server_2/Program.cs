@@ -20,7 +20,6 @@ namespace AsyncTCP_Server_2
 
             Socket sListener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-            List<Socket> sockets = new List<Socket>();
             try
             {
                 sListener.Bind(ipEnd);
@@ -59,8 +58,6 @@ namespace AsyncTCP_Server_2
                             {
                                 byte[] bytes = new byte[1024];
 
-                                string str = null;
-
                                 int recieve = acceptTask.Receive(bytes);
 
                                 string rec = Encoding.UTF8.GetString(bytes, 0, recieve);
@@ -75,7 +72,7 @@ namespace AsyncTCP_Server_2
 
                                 Console.WriteLine(rec);
 
-                                foreach (var socket in sockets)
+                                foreach (var socket in dic.Values)
                                 {
                                     socket.Send(Encoding.UTF8.GetBytes(rec));
                                 }
